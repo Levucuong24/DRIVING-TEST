@@ -1,8 +1,21 @@
+const mongoose = require("mongoose")
 const Question = require("../models/Question")
+
+const normalizeQuestionPayload = (payload) => {
+  const normalized = { ...payload }
+
+  if (!normalized.categoryId) {
+    normalized.categoryId = null
+  } else if (!mongoose.Types.ObjectId.isValid(normalized.categoryId)) {
+    delete normalized.categoryId
+  }
+
+  return normalized
+}
 
 exports.getQuestions = async(req,res)=>{
 
-const questions = await Question.find()
+const questions = await Question.find().populate("categoryId")
 
 res.json(questions)
 
@@ -10,7 +23,7 @@ res.json(questions)
 
 exports.createQuestion = async(req,res)=>{
 
-const question = await Question.create(req.body)
+const question = await Question.create(normalizeQuestionPayload(req.body))
 
 res.json(question)
 
@@ -20,7 +33,7 @@ exports.updateQuestion = async(req,res)=>{
 
 const question = await Question.findByIdAndUpdate(
 req.params.id,
-req.body,
+normalizeQuestionPayload(req.body),
 {new:true}
 )
 

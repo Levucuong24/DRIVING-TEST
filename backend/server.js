@@ -10,10 +10,9 @@ const authRoutes = require("./routes/authRoutes")
 const questionRoutes = require("./routes/questionRoutes")
 const examRoutes = require("./routes/examRoutes")
 const uploadRoutes = require("./routes/uploadRoutes")
+const categoryRoutes = require("./routes/categoryRoutes")
 
 const app = express()
-
-connectDB()
 
 app.use(cors())
 app.use(express.json())
@@ -25,9 +24,19 @@ app.use("/api/auth",authRoutes)
 app.use("/api/questions",questionRoutes)
 app.use("/api/exam",examRoutes)
 app.use("/api/upload",uploadRoutes)
+app.use("/api/categories",categoryRoutes)
 
-app.listen(process.env.PORT,()=>{
+const startServer = async () => {
+  try {
+    await connectDB()
 
-console.log("Server running on port "+process.env.PORT)
+    app.listen(process.env.PORT, () => {
+      console.log("Server running on port " + process.env.PORT)
+    })
+  } catch (error) {
+    console.error(error)
+    process.exit(1)
+  }
+}
 
-})
+startServer()

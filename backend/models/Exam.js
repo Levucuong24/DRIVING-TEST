@@ -13,7 +13,13 @@ totalQuestions:Number,
 
 correctAnswers:Number,
 
+criticalQuestions:Number,
+
+criticalWrongAnswers:Number,
+
 status:String,
+
+failReason:String,
 
 duration:Number
 

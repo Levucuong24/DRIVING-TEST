@@ -6,17 +6,17 @@ const path = require('path');
 // Configure Multer storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        // Destination directory where uploaded files will be stored
+        
         cb(null, path.join(__dirname, '../uploads/'));
     },
     filename: function (req, file, cb) {
-        // Rename the file to ensure uniqueness
+        
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
 
-// Init upload containing storage config and file filter for images only
+
 const upload = multer({ 
     storage: storage,
     fileFilter: function (req, file, cb) {
@@ -31,14 +31,14 @@ const upload = multer({
     }
 });
 
-// Single image upload route
+
 router.post('/', upload.single('image'), (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded or invalid file type' });
         }
         
-        // Return the accessible URL for the uploaded file
+        
         const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
         res.status(200).json({ url: fileUrl });
     } catch (error) {
